@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { PostsService } from "./../posts.service";
 
 import { Comment } from "./../models/comment.model";
@@ -17,6 +17,7 @@ export class CommentCreateComponent implements OnInit {
 
   commentForm: FormGroup;
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private postsService: PostsService
   ) {}
@@ -44,13 +45,19 @@ export class CommentCreateComponent implements OnInit {
 
     if (this.editMode) {
       comment["id"] = this.commentId;
-      this.postsService
-        .updateComment(comment)
-        .subscribe((res: Comment) => this.postsService.onUpdateComment(res));
+      this.postsService.updateComment(comment).subscribe((res: Comment) => {
+        this.postsService.onUpdateComment(res);
+        this.goBack();
+      });
     } else {
-      this.postsService
-        .addComment(comment)
-        .subscribe((res: Comment) => this.postsService.onAddComment(res));
+      this.postsService.addComment(comment).subscribe((res: Comment) => {
+        this.postsService.onAddComment(res);
+        this.goBack();
+      });
     }
+  }
+
+  goBack() {
+    this.router.navigate(["/posts"]);
   }
 }

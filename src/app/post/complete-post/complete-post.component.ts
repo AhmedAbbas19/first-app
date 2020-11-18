@@ -7,7 +7,7 @@ import { Post } from "../models/post.model";
   styleUrls: ["./complete-post.component.css"],
 })
 export class CompletePostComponent implements OnInit {
-  @Input("post") post: Post;
+  @Input() post: Post;
   constructor() {}
 
   ngOnInit() {}

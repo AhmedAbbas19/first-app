@@ -11,7 +11,7 @@ import { Subject } from "rxjs/Subject";
 @Injectable()
 export class PostsService {
   baseURL: string;
-  posts: Post[];
+  posts: Post[] = [];
   postsSub = new Subject<Post[]>();
 
   constructor(private http: HttpClient) {
@@ -69,11 +69,13 @@ export class PostsService {
 
   onUpdateComment(comment: Comment) {
     const postIdx = this.posts.findIndex((post) => post.id === comment.postId);
+    if (postIdx === -1) return;
     this.posts[postIdx].comments = this.posts[postIdx].comments.map((com) => {
       if (com.id === comment.id) {
         return comment;
       }
       return com;
     });
+    this.postsSub.next(this.posts);
   }
 }
